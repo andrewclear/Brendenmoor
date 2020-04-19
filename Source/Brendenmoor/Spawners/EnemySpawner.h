@@ -11,14 +11,14 @@
  * 
  */
 UCLASS(Blueprintable, ClassGroup = "Spawners", meta = (BlueprintSpawnableComponent))
-class BRENDENMOOR_API UEnemySpawner : public USpawner
+class BRENDENMOOR_API AEnemySpawner : public ASpawner
 {
 	GENERATED_BODY()
 	
 public:
 
 	/*Blueprint Reference of UsefulActor class*/
-	UPROPERTY(BlueprintReadWrite, Category = "Actor Spawning")
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Actor Spawning")
 	TSubclassOf<ABrendenmoorCharacter> EnemyToSpawn;
 
 	//UFUNCTION(BlueprintCallable, Category ="Spawners", meta = (DisplayName = "Spawn Enemy"))

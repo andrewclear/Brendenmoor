@@ -3,3 +3,8 @@
 
 #include "BrendenmoorNonPlayableCharacter.h"
 
+ABrendenmoorNonPlayableCharacter::ABrendenmoorNonPlayableCharacter() :
+	ABrendenmoorCharacter()
+{
+	spawnerReference = nullptr;
+}

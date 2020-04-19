@@ -1,13 +1,12 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
-#include "Engine/World.h"
 #include "Spawner.h"
+#include "Engine/World.h"
 #include "Engine.h"
 #include "Math/UnrealMathUtility.h"
 
 // Sets default values
-USpawner::USpawner()
+ASpawner::ASpawner()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	//PrimaryActorTick.bCanEverTick = true;
@@ -32,43 +31,64 @@ void USpawner::Tick(float DeltaTime)
 }
 */
 
-void USpawner::Spawn()
+void ASpawner::Spawn()
 {
 
 }
 
-FVector2D USpawner::GetSpawnLocation()
+FVector ASpawner::GetSpawnLocation()
 {
-	float randX = FMath::FRandRange(SpawnRegionMin.X, SpawnRegionMax.X);
-	float randY = FMath::FRandRange(SpawnRegionMin.Y, SpawnRegionMax.Y);
+	FVector center = GetActorLocation();
+	float randX = FMath::FRandRange(center.X - SpawnAreaExtent.X, center.X + SpawnAreaExtent.X);
+	float randY = FMath::FRandRange(center.Y - SpawnAreaExtent.Y, center.Y + SpawnAreaExtent.Y);
+	float randZ = FMath::FRandRange(center.Z - SpawnAreaExtent.Z, center.Z + SpawnAreaExtent.Z);
 
-	return FVector2D(randX, randY);
+	return FVector(randX, randY, randZ);
 }
 
-void USpawner::SpawnObject(TSubclassOf<AActor> objectToSpawn)
+AActor* ASpawner::SpawnObject(TSubclassOf<AActor> objectToSpawn)
 {
+	AActor* actorRef = nullptr;
+
 	if (objectToSpawn)
 	{
 		FActorSpawnParameters SpawnParams;
 
-
-		UWorld* world = GetOwner()->GetWorld();
+		UWorld* world = GetWorld();
 
 		//Actual Spawn. The following function returns a reference to the spawned actor
-		if (world == nullptr) 
+		if (world == nullptr)
 		{
-			GEngine->AddOnScreenDebugMessage(-1, 30.0f, FColor::Green, "SpawnObject, GetWorld() is nullptr");
-			return;
+			GEngine->AddOnScreenDebugMessage(-1, 30.0f, FColor::Green, "Spawn, GetWorld() is nullptr");
+			return nullptr;
 		}
-		
-		AActor* ActorRef = world->SpawnActor<AActor>(objectToSpawn, GetComponentTransform(), SpawnParams);
-		//AActor* SpawnedActor1 = world->SpawnActor(objectToSpawn, NAME_None, GetComponentLocation());
-		//ActorRef->SetActorLocation(GetOwner()->GetActorLocation());
+
+		bool wasSuccessful = false;
+
+		do
+		{
+			FVector spawnLocation = GetSpawnLocation();
+			FRotator rotator;
+
+			actorRef = world->SpawnActor(objectToSpawn, &spawnLocation, &rotator);
+
+			if (actorRef == nullptr)
+			{
+				GEngine->AddOnScreenDebugMessage(-1, 30.0f, FColor::Red, "Spawn, ActorRef is nullptr");
+			}
+			else
+			{
+				wasSuccessful = true;
+				GEngine->AddOnScreenDebugMessage(-1, 30.0f, FColor::Green, "Spawn successful");
+			}
+
+		} while (wasSuccessful == false);
 	}
 	else
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 30.0f, FColor::Green, "SpawnObject, objectToSpawn is nullptr");
+		GEngine->AddOnScreenDebugMessage(-1, 30.0f, FColor::Red, "Spawn, EnemyToSpawn is nullptr");
 	}
-}
 
+	return actorRef;
+}
 
