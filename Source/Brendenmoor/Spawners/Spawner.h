@@ -5,7 +5,10 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Math/Vector2D.h"
+#include "BlueprintWrappers/SkyBlueprintWrapper.h"
 #include "Spawner.generated.h"
+
+
 
 UCLASS(Blueprintable, ClassGroup="Spawners", meta=(BlueprintSpawnableComponent))
 class BRENDENMOOR_API ASpawner : public AActor
@@ -23,13 +26,17 @@ protected:
 	FVector GetSpawnLocation();
 
 	AActor* SpawnObject(TSubclassOf<AActor> objectToSpawn);
-public:	
-	UFUNCTION(BlueprintCallable, Category ="Spawners"                                                                                                                                                   )
-	virtual void Spawn();
 
+public:	
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Spawners")
 	FVector SpawnAreaExtent;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Spawners")
 	float NavAreaRadius;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Spawners")
+	ASkyBlueprintWrapper* SkyBlueprintWrapper;
+
+	UFUNCTION(BlueprintCallable, Category = "Spawners")
+	virtual void Spawn();
 };

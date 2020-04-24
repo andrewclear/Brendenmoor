@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "BlueprintWrappers/SkyBlueprintWrapper.h"
 #include "BrendenmoorCharacter.generated.h"
 
 UCLASS(config=Game)
@@ -13,6 +14,9 @@ class ABrendenmoorCharacter : public ACharacter
 
 public:
 	ABrendenmoorCharacter();
+
+	UPROPERTY(BlueprintReadOnly, Category = "Spawners")
+	ASkyBlueprintWrapper* SkyBlueprintWrapper;
 
 };
 

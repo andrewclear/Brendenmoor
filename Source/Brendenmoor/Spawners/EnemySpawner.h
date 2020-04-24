@@ -7,9 +7,15 @@
 #include "Character/BrendenmoorCharacter.h"
 #include "EnemySpawner.generated.h"
 
-/**
- * 
- */
+USTRUCT(BlueprintType, Blueprintable)
+struct FEnemySpawnerData
+{
+	GENERATED_USTRUCT_BODY()
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Enemy Spawner Data")
+	TArray<TSubclassOf<ABrendenmoorCharacter>> EnemiesToSpawn;
+};
+
 UCLASS(Blueprintable, ClassGroup = "Spawners", meta = (BlueprintSpawnableComponent))
 class BRENDENMOOR_API AEnemySpawner : public ASpawner
 {
@@ -17,11 +23,9 @@ class BRENDENMOOR_API AEnemySpawner : public ASpawner
 	
 public:
 
-	/*Blueprint Reference of UsefulActor class*/
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Actor Spawning")
-	TSubclassOf<ABrendenmoorCharacter> EnemyToSpawn;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Spawners")
+	TArray<FEnemySpawnerData> SpawnerData;
 
-	//UFUNCTION(BlueprintCallable, Category ="Spawners", meta = (DisplayName = "Spawn Enemy"))
 	virtual void Spawn() override;
 
 };

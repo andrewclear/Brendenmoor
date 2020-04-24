@@ -7,13 +7,21 @@
 
 void AEnemySpawner::Spawn()
 {
-	AActor* spawnedEnemy = SpawnObject(EnemyToSpawn);
+	AActor* spawnedEnemy = nullptr;
+	ABrendenmoorNonPlayableCharacter* spawnedNPC = nullptr;
 
-	if (spawnedEnemy != nullptr) {
-		ABrendenmoorNonPlayableCharacter* enemyNPC = Cast< ABrendenmoorNonPlayableCharacter>(spawnedEnemy);
+	for (int i = 0; i < SpawnerData[0].EnemiesToSpawn.Num(); i++)
+	{
+		if (SpawnerData[0].EnemiesToSpawn[i])
+		{
+			spawnedEnemy = SpawnObject(SpawnerData[0].EnemiesToSpawn[i]);
+			spawnedNPC = Cast<ABrendenmoorNonPlayableCharacter>(spawnedEnemy);
 
-		if (enemyNPC != nullptr) {
-			enemyNPC->SetSpawner(this);
+			if (spawnedNPC != nullptr)
+			{
+				spawnedNPC->SetSpawner(this);
+				spawnedNPC->SkyBlueprintWrapper = SkyBlueprintWrapper;
+			}
 		}
 	}
 }
